@@ -7,7 +7,7 @@ export default async function getProducts(ids: number[]): Promise<Product[]> {
             name: `Product ${id}`,
             price: Math.round(Math.random() * 100),
             description: `This is the description of product ${id}`,
-            image: `https://picsum.photos/200/320?random=${id}`,
+            image: `https://source.unsplash.com/random/200x300/?fashion=1&id=${id}`,
         };
     }
     );
