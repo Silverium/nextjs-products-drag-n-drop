@@ -40,3 +40,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 1. Fork a vercel's repo with a basic template. Remove unnecessary stuff.
 2. Create the mock Products service
 3. Create a basic Products page
+4. Implement a basic horizontal drag and drop for Products page
