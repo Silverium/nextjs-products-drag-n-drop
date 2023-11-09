@@ -41,4 +41,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 2. Create the mock Products service
 3. Create a basic Products page
 4. Implement a basic horizontal drag and drop for Products page
-5. Create multiple rows of draggable products.
+5. Create multiple rows of draggable Products page
+6. Buttons to add and remove rows in Products page
