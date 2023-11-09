@@ -8,6 +8,7 @@ export default async function getProducts(ids: number[]): Promise<Product[]> {
             price: Math.round(Math.random() * 100),
             description: `This is the description of product ${id}`,
             image: `https://source.unsplash.com/random/200x300/?fashion=1&id=${id}`,
+            imageWidth: 200,
         };
     }
     );
