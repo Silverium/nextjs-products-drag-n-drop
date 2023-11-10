@@ -1,9 +1,11 @@
 "use client"
+import getProducts from "@/services/products/getProducts";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 export default function DraggableLists({ products, maxItemsPerRow = 3 }: { products: Product[], maxItemsPerRow?: number }) {
+    const itemsMap = useRef({} as Record<number, Product>);
 
     // split into rows of maxItemsPerRow items each
     const [items, updateItems] = useState(products.reduce((acc, product, index) => {
@@ -12,6 +14,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
             acc[row] = [];
         }
         acc[row].push(product);
+        itemsMap.current[product.id] = product;
         return acc;
     }, [] as Product[][]));
     const [imageLinks, setImageLinks] = useState({} as Record<number, string>);
@@ -83,6 +86,19 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
         updateItems(clonedItems);
     }, [items]);
 
+    const addProduct = useCallback((index: number) => async () => {
+        const clonedItems = [...items.map(row => [...row])];
+        let randomId = Math.floor(Math.random() * 1000);
+        while (itemsMap.current[randomId]) {
+            randomId = Math.floor(Math.random() * 1000);
+        }
+        const randomProduct = await getProducts([randomId]);
+        clonedItems[index].push(randomProduct[0]);
+        const imageLink = await fetch(randomProduct[0].image);
+        setImageLinks({ ...imageLinks, [randomProduct[0].id]: imageLink.url });
+        updateItems(clonedItems);
+    }, [items, imageLinks]);
+
     return (
         <div>
             <div className="flex justify-center">
@@ -148,13 +164,21 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
                                                                         </Draggable>
                                                                     ))}
                                                                     {provided.placeholder}
-                                                                    {row.length === 0
-                                                                        ? (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                                                            onClick={removeRow(rowIndex)}>
-                                                                            remove row</button>)
-                                                                        : (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                                                            onClick={addRow(rowIndex)}>
-                                                                            add row</button>)}
+                                                                    <div className="flex flex-col justify-center">
+                                                                        {row.length < 3 &&
+                                                                            <button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={addProduct(rowIndex)}>
+                                                                                Add product
+                                                                            </button>}
+                                                                        {row.length === 0
+                                                                            ? (
+                                                                                <button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                                                                    onClick={removeRow(rowIndex)}>
+                                                                                    remove row</button>
+                                                                            )
+                                                                            : (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                                                                onClick={addRow(rowIndex)}>
+                                                                                add row</button>)}
+                                                                    </div>
                                                                 </div>
                                                             )
                                                         }}

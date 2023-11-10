@@ -45,3 +45,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 6. Buttons to add and remove rows in Products page
 7. Draggable rows in Products page
 8. Limit the number of items per row in Products page
+9. Buttons to add items to the row
