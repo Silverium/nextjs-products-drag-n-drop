@@ -5,9 +5,9 @@ import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautif
 
 export default function DraggableLists({ products, maxItemsPerRow = 3 }: { products: Product[], maxItemsPerRow?: number }) {
 
-    // split into rows of 3 items each
+    // split into rows of maxItemsPerRow items each
     const [items, updateItems] = useState(products.reduce((acc, product, index) => {
-        const row = Math.floor(index / 3);
+        const row = Math.floor(index / maxItemsPerRow);
         if (!acc[row]) {
             acc[row] = [];
         }
