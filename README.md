@@ -43,3 +43,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 4. Implement a basic horizontal drag and drop for Products page
 5. Create multiple rows of draggable Products page
 6. Buttons to add and remove rows in Products page
+7. Draggable rows in Products page
+8. Limit the number of items per row in Products page
