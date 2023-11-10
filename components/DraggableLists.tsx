@@ -51,12 +51,32 @@ export default function DraggableLists({ products }: { products: Product[] }) {
         clonedItems[destRow].splice(destIndex, 0, removed);
         updateItems(clonedItems);
     }, [items])
+    const addRow = useCallback((index: number) => () => {
+        const clonedItems = [...items.map(row => [...row])];
+        clonedItems.splice(index + 1, 0, []);
+        updateItems(clonedItems);
+    }, [items]);
+
+    const removeRow = useCallback((index: number) => () => {
+        const clonedItems = [...items.map(row => [...row])];
+        clonedItems.splice(index, 1);
+        updateItems(clonedItems);
+    }, [items]);
+
+    const clearEmptyRows = useCallback(() => {
+        const clonedItems = [...items.filter(row => row.length).map(row => [...row])];
+        updateItems(clonedItems);
+    }, [items]);
+
     return (
         <div>
             <div className="flex justify-center">
                 <h1 className="text-4xl font-bold">Tools</h1>
                 <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={unshiftRow}>
                     Unshift row
+                </button>
+                <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={clearEmptyRows}>
+                    Clear empty rows
                 </button>
             </div>
 
@@ -91,6 +111,13 @@ export default function DraggableLists({ products }: { products: Product[] }) {
                                     </Draggable>
                                 ))}
                                 {provided.placeholder}
+                                {row.length === 0
+                                    ? (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={removeRow(rowIndex)}>
+                                        remove row</button>)
+                                    : (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={addRow(rowIndex)}>
+                                        add row</button>)}
                             </div>
                         )}
                     </Droppable>))}
