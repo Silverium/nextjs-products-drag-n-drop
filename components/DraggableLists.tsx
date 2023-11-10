@@ -1,8 +1,11 @@
 "use client"
 import getProducts from "@/services/products/getProducts";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import type { Product } from "@/types/Product";
+import Image from "next/image";
+
 
 export default function DraggableLists({ products, maxItemsPerRow = 3 }: { products: Product[], maxItemsPerRow?: number }) {
     const itemsMap = useRef({} as Record<number, Product>);
@@ -17,22 +20,8 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
         itemsMap.current[product.id] = product;
         return acc;
     }, [] as Product[][]));
-    const [imageLinks, setImageLinks] = useState({} as Record<number, string>);
     const [sourceRowId, setSourceRowId] = useState("")
 
-    useEffect(() => {
-        // Fetch and store image links for each element
-        const fetchImageLinks = async () => {
-            const updatedImageLinks: Record<number, string> = {};
-            await Promise.all(products.map(async (element) => {
-                const response = await fetch(element.image);
-                updatedImageLinks[element.id] = response.url;
-            }));
-            setImageLinks(updatedImageLinks);
-        };
-
-        fetchImageLinks();
-    }, [products]);
 
     const unshiftRow = useCallback(() => {
         const clonedItems = [...items.map(row => [...row])];
@@ -68,7 +57,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
         const [removed] = clonedItems[sourceRow].splice(sourceIndex, 1);
         clonedItems[destRow].splice(destIndex, 0, removed);
         updateItems(clonedItems);
-    }, [items])
+    }, [items, maxItemsPerRow])
     const addRow = useCallback((index: number) => () => {
         const clonedItems = [...items.map(row => [...row])];
         clonedItems.splice(index + 1, 0, []);
@@ -94,10 +83,8 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
         }
         const randomProduct = await getProducts([randomId]);
         clonedItems[index].push(randomProduct[0]);
-        const imageLink = await fetch(randomProduct[0].image);
-        setImageLinks({ ...imageLinks, [randomProduct[0].id]: imageLink.url });
         updateItems(clonedItems);
-    }, [items, imageLinks]);
+    }, [items]);
 
     return (
         <div>
@@ -142,7 +129,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
 
                                                                     {row.map((product, index) => (
                                                                         <Draggable key={product.id} draggableId={(product.name)} index={index}>
-                                                                            {(provided, snapshot) => {
+                                                                            {(provided) => {
                                                                                 return (
                                                                                     <div ref={provided.innerRef}
                                                                                         {...provided.draggableProps}
@@ -156,7 +143,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3 }: { produ
                                                                                         >
                                                                                             {product.name}
                                                                                         </Link>
-                                                                                        <img src={`${imageLinks[product.id]}`} alt={product.name} width={product.imageWidth} />
+                                                                                        <Image src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight}/>
                                                                                         <span>{product.price}€</span>
                                                                                     </div>
                                                                                 )
