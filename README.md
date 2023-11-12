@@ -48,3 +48,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 9. Buttons to add items to the row
 10. Create the `/templates` endpoint and service
 11. Create templates selector button
+12. Zoom functionality to Products Page
