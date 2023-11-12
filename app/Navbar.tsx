@@ -1,5 +1,5 @@
 "use client";
-import { useToggle } from "@uidotdev/usehooks";
+import { useToggle } from "react-use";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
