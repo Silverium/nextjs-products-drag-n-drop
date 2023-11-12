@@ -47,3 +47,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 8. Limit the number of items per row in Products page
 9. Buttons to add items to the row
 10. Create the `/templates` endpoint and service
+11. Create templates selector button
