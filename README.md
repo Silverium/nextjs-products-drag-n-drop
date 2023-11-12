@@ -49,3 +49,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 10. Create the `/templates` endpoint and service
 11. Create templates selector button
 12. Zoom functionality to Products Page
+ - I found a bug in the `beautiful-drag-n-drop` functionality that does not allow for scaled items to be dragged around. I decided to disable the feature while scaling.
+13. Create the `/grids` endpoint to POST grids and to GET grids

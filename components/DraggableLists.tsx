@@ -8,18 +8,15 @@ import Image from "next/image";
 import { Template } from "@/types/Templates";
 import { LuMoveVertical } from "react-icons/lu";
 import TemplatesSelector from "./TemplatesSelector";
+import { Grid } from "@/types/Grid";
 
-type ProductRow = {
-    items: Product[];
-    template: Template
-}
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates }: { products: Product[], maxItemsPerRow?: number, templates: Template[] }) {
     const [zoom, setZoom] = useState<number>(100);
     const isDragDisabled = zoom !== 100;
     const itemsMap = useRef({} as Record<number, Product>);
 
     // split into rows of maxItemsPerRow items each
-    const [items, updateItems] = useState(products.reduce((acc, product, index) => {
+    const [grid, updateGrid] = useState(products.reduce((acc, product, index) => {
         const row = Math.floor(index / maxItemsPerRow);
         if (!acc[row]) {
             acc[row] = { items: [], template: templates[0] };
@@ -27,15 +24,15 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
         acc[row].items.push(product);
         itemsMap.current[product.id] = product;
         return acc;
-    }, [] as ProductRow[]));
+    }, [] as Grid));
     const [sourceRowId, setSourceRowId] = useState("")
 
 
     const unshiftRow = useCallback(() => {
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         clonedItems.unshift({ items: [], template: templates[0] });
-        updateItems(clonedItems);
-    }, [items, templates]);
+        updateGrid(clonedItems);
+    }, [grid, templates]);
 
     const onDragEnd = useCallback((result: DropResult) => {
         if (!result.destination) {
@@ -43,10 +40,10 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
         }
 
         if (result.type === "row") {
-            const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+            const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
             const [removed] = clonedItems.splice(result.source.index, 1);
             clonedItems.splice(result.destination.index, 0, removed);
-            updateItems(clonedItems);
+            updateGrid(clonedItems);
             return;
         }
         const sourceRow = Number(result.source.droppableId);
@@ -58,48 +55,48 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                 return;
             }
 
-        } else if (items[destRow].items.length >= maxItemsPerRow) {
+        } else if (grid[destRow].items.length >= maxItemsPerRow) {
             return;
         }
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         const [removed] = clonedItems[sourceRow].items.splice(sourceIndex, 1);
         clonedItems[destRow].items.splice(destIndex, 0, removed);
-        updateItems(clonedItems);
-    }, [items, maxItemsPerRow])
+        updateGrid(clonedItems);
+    }, [grid, maxItemsPerRow])
     const addRow = useCallback((index: number) => () => {
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         clonedItems.splice(index + 1, 0, { items: [], template: templates[0] });
-        updateItems(clonedItems);
-    }, [items, templates]);
+        updateGrid(clonedItems);
+    }, [grid, templates]);
 
     const removeRow = useCallback((index: number) => () => {
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         clonedItems.splice(index, 1);
-        updateItems(clonedItems);
-    }, [items]);
+        updateGrid(clonedItems);
+    }, [grid]);
 
     const clearEmptyRows = useCallback(() => {
-        const clonedItems = [...items.filter(row => row.items.length)];
-        updateItems(clonedItems);
-    }, [items]);
+        const clonedItems = [...grid.filter(row => row.items.length)];
+        updateGrid(clonedItems);
+    }, [grid]);
 
     const addProduct = useCallback((index: number) => async () => {
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         let randomId = Math.floor(Math.random() * 1000);
         while (itemsMap.current[randomId]) {
             randomId = Math.floor(Math.random() * 1000);
         }
         const randomProduct = await getProducts([randomId]);
         clonedItems[index].items.push(randomProduct[0]);
-        updateItems(clonedItems);
-    }, [items]);
+        updateGrid(clonedItems);
+    }, [grid]);
 
     const handleTemplateSelect = useCallback((index: number) => (template: Template) => {
-        const clonedItems = [...items.map(row => ({ items: [...row.items], template: row.template }))];
+        const clonedItems = [...grid.map(row => ({ items: [...row.items], template: row.template }))];
         clonedItems[index].template = template;
-        updateItems(clonedItems);
+        updateGrid(clonedItems);
     }
-        , [items]);
+        , [grid]);
 
     const getAlignmentStyle = useCallback((template: Template) => {
         switch (template.alignment) {
@@ -156,7 +153,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                     <Droppable droppableId="all-rows" direction="vertical" type="row" >
                         {(provided, snapshot) => (
                             <div ref={provided.innerRef} className={`${snapshot.isDraggingOver ? "bg-yellow-500" : "bg-purple-500"} min-h-[200px] `} {...provided.droppableProps} >
-                                {items.map((row, rowIndex) => (
+                                {grid.map((row, rowIndex) => (
                                     <Draggable key={rowIndex} draggableId={`${rowIndex}`} index={rowIndex} isDragDisabled={isDragDisabled}>
                                         {(provided, snapshot) => {
                                             return (
