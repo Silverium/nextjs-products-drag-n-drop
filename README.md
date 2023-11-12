@@ -46,3 +46,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 7. Draggable rows in Products page
 8. Limit the number of items per row in Products page
 9. Buttons to add items to the row
+10. Create the `/templates` endpoint and service
