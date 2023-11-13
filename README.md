@@ -65,3 +65,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 13. Create the `/grids` endpoint to POST grids and to GET grids
 14. Add updateGrid function and refactor createGrid to handle updates
 15. Document the requirements of the exercise
+16. Visual fixes and UX improvements
+    - Navbar to be readable on dark and light settings

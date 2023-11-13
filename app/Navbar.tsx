@@ -23,7 +23,7 @@ const Navbar = () => {
                             <li key={item.label}>
                                 <Link
                                     href={item.href}
-                                    className="font-montserrat leading-normal text-lg text-slate-gray"
+                                    className="font-montserrat leading-normal text-lg text-black dark:text-slate-100"
                                 >
                                     {item.label}
                                 </Link>
@@ -45,7 +45,7 @@ const Navbar = () => {
             </header>
             {isMenuOpen && (
                 <div >
-                    <nav className="z-50 fixed top-0 right-0 left-0 bottom-0 lg:bottom-auto bg-slate-100  ">
+                    <nav className="z-50 fixed top-0 right-0 left-0 bottom-0 lg:bottom-auto bg-slate-100 dark:bg-black text-black dark:text-slate-100 ">
                         <div
                             className="hidden max-lg:block fixed right-0  px-8 py-4 cursor-pointer"
                             onClick={() => toggleMenu()}
