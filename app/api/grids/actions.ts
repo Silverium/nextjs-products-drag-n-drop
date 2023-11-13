@@ -3,6 +3,7 @@
 import postGrids from "@/services/grids/postGrids";
 import updateGrid from "@/services/grids/updateGrid";
 import { Grid } from "@/types/Grid";
+import { revalidatePath } from 'next/cache'
 
 export async function createGrid(prevState: any, formData: FormData) {
   try {
@@ -25,10 +26,16 @@ export async function createGrid(prevState: any, formData: FormData) {
     const gridId = formData.get("gridId")?.toString();
     if (gridId) {
       await updateGrid({ id: gridId, grid: parsedGrid });
+      revalidatePath(`/grids?grid=${gridId}`)
+      revalidatePath(`/products?grid=${gridId}`)
+      revalidatePath(`/grids`)
       return { success: 1, id: gridId };
     }
 
     const [id] = await postGrids([parsedGrid]);
+    revalidatePath(`/grids?grid=${gridId}`)
+    revalidatePath(`/products?grid=${gridId}`)
+    revalidatePath(`/grids`)
     return { success: 1, id };
   } catch (error) {
     console.error(error);
