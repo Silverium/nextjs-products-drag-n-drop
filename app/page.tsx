@@ -14,7 +14,7 @@ export default function Home() {
           </span>
         </div>
       </div>
-      <ul className="gap-4 max-w-5xl w-full items-center justify-between font-mono text-sm">
+      <ul className="flex flex-col gap-4 max-w-5xl w-full items-center justify-between font-mono text-sm">
         <li className="flex gap-4 max-w-5xl w-full items-center justify-between font-mono text-sm">
           The photo, name, and price of each product must be visible at all times.
         </li>
