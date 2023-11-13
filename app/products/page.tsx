@@ -15,8 +15,8 @@ export default async function ProductsPage({ searchParams: { products: productId
     const [products, templates, grids] = await Promise.all(promises);
     const gridItem = grids?.[0];
     return (
-        <section className="min-h-screen flex-col items-center justify-between p-24">
-            <h1 className="text-4xl font-bold">Products drag n drop</h1>
+        <section className="min-h-screen flex flex-col items-center sm:p-2 md:p-4 lg:p-8 xl:p-16 2xl:p-32">
+            <h1 className="text-4xl font-bold mb-8 text-center">Products drag n drop</h1>
             <DraggableLists products={products as Products} grid={gridItem as Grids[number]} templates={templates as Templates} />
         </section>
     )

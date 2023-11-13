@@ -11,6 +11,7 @@ import { useFormState } from "react-dom";
 import { createGrid } from "@/app/api/grids/actions";
 import getTemplateStyle from "@/utils/style/getTemplateStyle";
 import ProductCard from "./ProductCard";
+import productsSettings from "@/settings/products";
 
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates, grid }: { products?: Product[], maxItemsPerRow?: number, templates: Template[], grid?: GridDbItem }) {
     const [zoom, setZoom] = useState<number>(100);
@@ -106,8 +107,10 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
 
     return (
         <div>
-            <div className="flex justify-center m-2">
-                <h1 className="text-4xl font-bold">Tools</h1>
+            <div className="flex flex-col gap-2">
+                <h1 className="text-2xl font-bold self-center">Tools</h1>
+                <div className="grid grid-cols-2 gap-2 justify-center lg:m-4 md:grid-cols-3 lg:flex">
+
                 <span title="Due to the drag and drop library implementation, there is a bug that prevents from dragging scaled elements. Reset Zoom to enable the drag and drop functionality" className={`${isDragDisabled ? "bg-red-400 text-white" : "bg-green-400 text-black"} self-center py-2 px-4 ml-4 rounded`}>Drag {isDragDisabled ? "disabled" : "enabled"}</span>
                 <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={unshiftRow}>
                     Unshift row
@@ -137,8 +140,9 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                     <button className={`ml-4 ${formState.success ? "bg-green-400" : "bg-blue-500"} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`} type="submit">
                         Save
                     </button>
-                    <p className="text-red-500">{formState?.message}</p>
+                    <span className="text-red-500 m-2">{formState?.message}</span>
                 </form>
+                </div>
             </div>
             <div id="editor" ref={editorRef as LegacyRef<HTMLDivElement>} className="relative " style={{
                 transform: `scale(${zoom / 100})`,
@@ -151,8 +155,8 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                     }}
                 >
                     <Droppable droppableId="all-rows" direction="vertical" type="row" >
-                        {(provided, snapshot) => (
-                            <div ref={provided.innerRef} className={`${snapshot.isDraggingOver ? "bg-yellow-500" : "bg-purple-500"} min-h-[200px] `} {...provided.droppableProps} >
+                        {(provided) => (
+                            <div ref={provided.innerRef} className={`rounded-tl rounded-tr  text-black min-h-[200px]`} {...provided.droppableProps} >
                                 {gridState.map((row, rowIndex) => (
                                     <Draggable key={rowIndex} draggableId={`${rowIndex}`} index={rowIndex} isDragDisabled={isDragDisabled}>
                                         {(provided, snapshot) => {
@@ -168,9 +172,9 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                             left: `${(provided.draggableProps.style as DraggingStyle)?.left - editorMeasures.x}px`,
                                                         }
                                                     }}
-                                                    className="draggable-row"
+                                                    className={`draggable-row rounded ${snapshot.isDragging ? "bg-green-100" : "bg-purple-100"}`}
                                                 >
-                                                    <div className="flex justify-between items-center" {...provided.dragHandleProps}>
+                                                    <div className="flex justify-between items-center rounded-tl rounded-tr border-3" {...provided.dragHandleProps}>
                                                         <i className="p-2 font-black text-lg"><LuMoveVertical /></i>
                                                         <h3 >{`Row ${rowIndex + 1}`}</h3>
                                                         <div className="flex justify-center">
@@ -189,7 +193,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                             const isSameRow = sourceRowId === `${rowIndex}`;
                                                             const bgColor = row.items.length < 3 || isSameRow ? "bg-green-500" : "bg-red-500";
                                                             return (
-                                                                <div ref={provided.innerRef} className={`flex ${snapshot.isDraggingOver ? bgColor : "bg-blue-500"} min-h-[200px] ${getTemplateStyle(row.template)} relative`} {...provided.droppableProps}
+                                                                <div ref={provided.innerRef} className={`flex ${snapshot.isDraggingOver ? bgColor : "bg-slate-100 dark:bg-black"} ${getTemplateStyle(row.template)} relative min-h-[${productsSettings.imageHeight + 50}px]`} {...provided.droppableProps}
                                                                 >
 
                                                                     {row.items.map((product, index) => (
@@ -221,20 +225,20 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                                         </Draggable>
                                                                     ))}
                                                                     {provided.placeholder}
+                                                                    {row.items.length < 3 &&
+                                                                        <button className={`m-2 bg-gray-200 text-black border-2 border-gray-500 border-dashed hover:bg-gray-700 hover:text-white font-bold py-2 px-4 rounded min-w-[${productsSettings.imageWidth}px]`} onClick={addProduct(rowIndex)} style={{
+                                                                            height: `${productsSettings.imageHeight + 50}px`
+                                                                        }}>
+                                                                            Add product
+                                                                        </button>}
                                                                     <div className="flex flex-col justify-center">
-                                                                        {row.items.length < 3 &&
-                                                                            <button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={addProduct(rowIndex)}>
-                                                                                Add product
-                                                                            </button>}
                                                                         {row.items.length === 0
-                                                                            ? (
+                                                                            && (
                                                                                 <button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                                                                     onClick={removeRow(rowIndex)}>
                                                                                     remove row</button>
                                                                             )
-                                                                            : (<button className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                                                                onClick={addRow(rowIndex)}>
-                                                                                add row</button>)}
+                                                                        }
                                                                     </div>
                                                                 </div>
                                                             )

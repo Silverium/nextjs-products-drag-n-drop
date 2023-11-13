@@ -69,3 +69,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - Navbar to be readable on dark and light settings
     - Create a Card for the product and use it in products and grid pages
     - Responsive view for Grid. Dark theme improvement for the card
+    - Refactor "Add product" button to be like a card placeholder
+    - Responsive design for Products page
