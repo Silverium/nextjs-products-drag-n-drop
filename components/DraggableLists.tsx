@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable, DropResult, DraggingStyle } from
 import type { Product } from "@/types/Product";
 import { Template } from "@/types/Templates";
 import { LuMoveVertical } from "react-icons/lu";
+import { BsTrashFill } from "react-icons/bs";
 import TemplatesSelector from "./TemplatesSelector";
 import { Grid, GridDbItem } from "@/types/Grid";
 import { useFormState } from "react-dom";
@@ -93,6 +94,11 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
         clonedItems[index].items.push(randomProduct[0]);
         updateGridState(clonedItems);
     }, [gridState]);
+    const deleteItem = useCallback((rowIndex: number, index: number) => () => {
+        const clonedItems = [...gridState.map(row => ({ items: [...row.items], template: row.template }))];
+        clonedItems[rowIndex].items.splice(index, 1);
+        updateGridState(clonedItems);
+    }, [gridState]);
 
     const handleTemplateSelect = useCallback((index: number) => (template: Template) => {
         const clonedItems = [...gridState.map(row => ({ items: [...row.items], template: row.template }))];
@@ -111,37 +117,37 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                 <h1 className="text-2xl font-bold self-center">Tools</h1>
                 <div className="grid grid-cols-2 gap-2 justify-center lg:m-4 md:grid-cols-3 lg:flex">
 
-                <span title="Due to the drag and drop library implementation, there is a bug that prevents from dragging scaled elements. Reset Zoom to enable the drag and drop functionality" className={`${isDragDisabled ? "bg-red-400 text-white" : "bg-green-400 text-black"} self-center py-2 px-4 ml-4 rounded`}>Drag {isDragDisabled ? "disabled" : "enabled"}</span>
-                <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={unshiftRow}>
-                    Unshift row
-                </button>
-                <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={clearEmptyRows}>
-                    Clear empty rows
-                </button>
-                <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => {
-                    setZoom((zoom + 10));
-                }}>
-                    Zoom in
-                </button>
-                <button className={`ml-4 ${zoom <= 10 ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-700"} text-white font-bold py-2 px-4 rounded`} onClick={() => {
-                    setZoom(Math.max(10, (zoom - 10)));
-                }}>
-                    Zoom out
-                </button>
-                <button className={`ml-4 ${zoom === 100 ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-700"} text-white font-bold py-2 px-4 rounded`} onClick={() => {
-                    setZoom(100);
-                }
-                }>
-                    Reset zoom from {zoom}%
-                </button>
-                <form action={formAction}>
-                    <input type="hidden" name="grid" value={JSON.stringify(gridState)} />
-                    <input type="hidden" name="gridId" value={grid?.id || formState.id} />
-                    <button className={`ml-4 ${formState.success ? "bg-green-400" : "bg-blue-500"} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`} type="submit">
-                        Save
+                    <span title="Due to the drag and drop library implementation, there is a bug that prevents from dragging scaled elements. Reset Zoom to enable the drag and drop functionality" className={`${isDragDisabled ? "bg-red-400 text-white" : "bg-green-400 text-black"} self-center py-2 px-4 ml-4 rounded`}>Drag {isDragDisabled ? "disabled" : "enabled"}</span>
+                    <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={unshiftRow}>
+                        Unshift row
                     </button>
-                    <span className="text-red-500 m-2">{formState?.message}</span>
-                </form>
+                    <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={clearEmptyRows}>
+                        Clear empty rows
+                    </button>
+                    <button className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => {
+                        setZoom((zoom + 10));
+                    }}>
+                        Zoom in
+                    </button>
+                    <button className={`ml-4 ${zoom <= 10 ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-700"} text-white font-bold py-2 px-4 rounded`} onClick={() => {
+                        setZoom(Math.max(10, (zoom - 10)));
+                    }}>
+                        Zoom out
+                    </button>
+                    <button className={`ml-4 ${zoom === 100 ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-700"} text-white font-bold py-2 px-4 rounded`} onClick={() => {
+                        setZoom(100);
+                    }
+                    }>
+                        Reset zoom from {zoom}%
+                    </button>
+                    <form action={formAction}>
+                        <input type="hidden" name="grid" value={JSON.stringify(gridState)} />
+                        <input type="hidden" name="gridId" value={grid?.id || formState.id} />
+                        <button className={`ml-4 ${formState.success ? "bg-green-400" : "bg-blue-500"} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`} type="submit">
+                            Save
+                        </button>
+                        <span className="text-red-500 m-2">{formState?.message}</span>
+                    </form>
                 </div>
             </div>
             <div id="editor" ref={editorRef as LegacyRef<HTMLDivElement>} className="relative " style={{
@@ -216,8 +222,10 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                                                                 width: `${newWidth}px`,
                                                                                             }
                                                                                         }}
-                                                                                        className={`m-2`}
+                                                                                        className={`m-2 relative`}
                                                                                     >
+                                                                                        <button className="text-3xl text-black drop-shadow-sm bg-white bg-opacity-30 rounded-lg absolute top-10 right-4" onClick={deleteItem(rowIndex, index)}><BsTrashFill /></button>
+
                                                                                         <ProductCard product={product} />
                                                                                     </div>
                                                                                 )

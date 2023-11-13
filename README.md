@@ -71,3 +71,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - Responsive view for Grid. Dark theme improvement for the card
     - Refactor "Add product" button to be like a card placeholder
     - Responsive design for Products page
+17. Functionality to remove items
