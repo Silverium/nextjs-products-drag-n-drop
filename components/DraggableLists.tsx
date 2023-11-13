@@ -1,10 +1,8 @@
 "use client"
 import getProducts from "@/services/products/getProducts";
-import Link from "next/link";
 import { LegacyRef, useCallback, useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult, DraggingStyle } from 'react-beautiful-dnd';
 import type { Product } from "@/types/Product";
-import Image from "next/image";
 import { Template } from "@/types/Templates";
 import { LuMoveVertical } from "react-icons/lu";
 import TemplatesSelector from "./TemplatesSelector";
@@ -12,6 +10,7 @@ import { Grid, GridDbItem } from "@/types/Grid";
 import { useFormState } from "react-dom";
 import { createGrid } from "@/app/api/grids/actions";
 import getTemplateStyle from "@/utils/style/getTemplateStyle";
+import ProductCard from "./ProductCard";
 
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates, grid }: { products?: Product[], maxItemsPerRow?: number, templates: Template[], grid?: GridDbItem }) {
     const [zoom, setZoom] = useState<number>(100);
@@ -215,15 +214,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                                                         }}
                                                                                         className={`m-2`}
                                                                                     >
-                                                                                        <Link
-                                                                                            href={{ pathname: "/products", query: { products: [product.id] } }}
-                                                                                            className="rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-                                                                                            rel="noopener noreferrer"
-                                                                                        >
-                                                                                            {product.name}
-                                                                                        </Link>
-                                                                                        <Image src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} />
-                                                                                        <span>{product.price}€</span>
+                                                                                        <ProductCard product={product} />
                                                                                     </div>
                                                                                 )
                                                                             }}

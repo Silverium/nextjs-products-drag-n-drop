@@ -67,3 +67,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 15. Document the requirements of the exercise
 16. Visual fixes and UX improvements
     - Navbar to be readable on dark and light settings
+    - Create a Card for the product and use it in products and grid pages
