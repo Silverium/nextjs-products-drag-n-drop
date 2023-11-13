@@ -3,12 +3,16 @@ import getProducts from "@/services/products/getProducts";
 import getTemplates from "@/services/templates/getTemplates";
 import dynamic from "next/dynamic";
 const DraggableLists = dynamic(() => import("@/components/DraggableLists"), { ssr: false });
-export default async function ProductsPage({ searchParams: { products: productIds, grid } }: { searchParams: { products: number[], grid: string } }) {
+export default async function ProductsPage({ searchParams: { products: productIds, grid } }: { searchParams: { products: string | string[], grid: string } }) {
 
     type Products = Awaited<ReturnType<typeof getProducts>>;
     type Templates = Awaited<ReturnType<typeof getTemplates>>;
     type Grids = Awaited<ReturnType<typeof getGrids>>;
-    const promises: Promise<Products | Templates | Grids>[] = [getProducts(productIds || []), getTemplates()];
+    const productIdsArray: string[] = Array.isArray(productIds) ? productIds : [];
+    if (typeof productIds === "string") {
+        productIdsArray.push(productIds)
+    }
+    const promises: Promise<Products | Templates | Grids>[] = [getProducts(productIdsArray), getTemplates()];
     if (typeof grid === "string") {
         promises.push(getGrids([grid]));
     }

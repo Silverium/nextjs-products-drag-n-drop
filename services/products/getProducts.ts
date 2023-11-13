@@ -3,7 +3,7 @@ import type { Product } from "@/types/Product";
 
 const { imageWidth, imageHeight } = productsSettings;
 
-export default async function getProducts(ids: number[]): Promise<Product[]> {
+export default async function getProducts(ids: string[]): Promise<Product[]> {
   // this can connect to any database and return the data
   // for now we mock it
   const products: Product[] = ids.map((id) => {
