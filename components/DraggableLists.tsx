@@ -9,6 +9,9 @@ import { Template } from "@/types/Templates";
 import { LuMoveVertical } from "react-icons/lu";
 import TemplatesSelector from "./TemplatesSelector";
 import { Grid } from "@/types/Grid";
+import { useFormState } from "react-dom";
+import { createGrid } from "@/app/api/grids/actions";
+import getTemplateStyle from "@/utils/style/getTemplateStyle";
 
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates }: { products: Product[], maxItemsPerRow?: number, templates: Template[] }) {
     const [zoom, setZoom] = useState<number>(100);
@@ -98,20 +101,9 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
     }
         , [grid]);
 
-    const getAlignmentStyle = useCallback((template: Template) => {
-        switch (template.alignment) {
-            case "left":
-                return "justify-start";
-            case "center":
-                return "justify-center";
-            case "right":
-                return "justify-end";
-            default:
-                return "justify-center";
-        }
-    }, []);
     const editorRef = useRef<HTMLDivElement>(null);
     const editorMeasures = editorRef.current?.getBoundingClientRect();
+    const [formState, formAction] = useFormState(createGrid, { message: null})
     return (
         <div>
             <div className="flex justify-center m-2">
@@ -139,6 +131,13 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                 }>
                     Reset zoom from {zoom}%
                 </button>
+                <form action={formAction}>
+                    <input type="hidden" name="grid" value={JSON.stringify(grid)} />
+                    <button className={`ml-4 ${formState.success ? "bg-green-400": "bg-blue-500"} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`} type="submit">
+                        Save
+                    </button>
+                    <p className="text-red-500">{formState?.message}</p>
+                </form>
             </div>
             <div id="editor" ref={editorRef as LegacyRef<HTMLDivElement>} className="relative " style={{
                 transform: `scale(${zoom / 100})`,
@@ -189,7 +188,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                                                             const isSameRow = sourceRowId === `${rowIndex}`;
                                                             const bgColor = row.items.length < 3 || isSameRow ? "bg-green-500" : "bg-red-500";
                                                             return (
-                                                                <div ref={provided.innerRef} className={`flex ${snapshot.isDraggingOver ? bgColor : "bg-blue-500"} min-h-[200px] ${getAlignmentStyle(row.template)} relative`} {...provided.droppableProps}
+                                                                <div ref={provided.innerRef} className={`flex ${snapshot.isDraggingOver ? bgColor : "bg-blue-500"} min-h-[200px] ${getTemplateStyle(row.template)} relative`} {...provided.droppableProps}
                                                                 >
 
                                                                     {row.items.map((product, index) => (
