@@ -8,6 +8,7 @@ const Navbar = () => {
 
     const navLinks = [
         { href: "/", label: "Home" },
+        { href: "/grids", label: "Grids" },
         { href: { pathname: "/products", query: { products: [1, 23, 53, 74, 57] } }, label: "Page (5 Products)" },
         { href: { pathname: "/api/products", query: { id: [1, 23, 53, 74, 57] } }, label: "Products Api sample" },
     ];
