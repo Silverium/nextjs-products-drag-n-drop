@@ -6,4 +6,8 @@ export type ProductRow = {
     template: Template
 }
 
-export type Grid = ProductRow[]
+export type Grid = ProductRow[];
+export type GridDbItem = {
+    id: string;
+    grid: Grid;
+}
