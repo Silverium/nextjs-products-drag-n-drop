@@ -1,6 +1,7 @@
 "use server";
 
 import postGrids from "@/services/grids/postGrids";
+import updateGrid from "@/services/grids/updateGrid";
 import { Grid } from "@/types/Grid";
 
 export async function createGrid(prevState: any, formData: FormData) {
@@ -8,7 +9,6 @@ export async function createGrid(prevState: any, formData: FormData) {
     const parsedGrid = JSON.parse(
       formData.get("grid")?.toString() || ""
     ) as Grid;
-
     if (parsedGrid.some((row) => row.items.length === 0)) {
       return {
         message:
@@ -21,9 +21,15 @@ export async function createGrid(prevState: any, formData: FormData) {
           "Grid must have a template per row. Please select a template for each row",
       };
     }
-    // TODO: refactor postGrids to be able to update existing grids? maybe create a different action or route for that
-    const ids = await postGrids([parsedGrid]);
-    return { success: 1, ids };
+
+    const gridId = formData.get("gridId")?.toString();
+    if (gridId) {
+      await updateGrid({ id: gridId, grid: parsedGrid });
+      return { success: 1, id: gridId };
+    }
+
+    const [id] = await postGrids([parsedGrid]);
+    return { success: 1, id };
   } catch (error) {
     console.error(error);
     return { message: error?.toString() };

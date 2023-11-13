@@ -104,6 +104,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
     const editorRef = useRef<HTMLDivElement>(null);
     const editorMeasures = editorRef.current?.getBoundingClientRect();
     const [formState, formAction] = useFormState(createGrid, { message: null })
+
     return (
         <div>
             <div className="flex justify-center m-2">
