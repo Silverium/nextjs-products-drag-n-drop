@@ -21,7 +21,7 @@ export async function createGrid(prevState: any, formData: FormData) {
           "Grid must have a template per row. Please select a template for each row",
       };
     }
-
+    // TODO: refactor postGrids to be able to update existing grids? maybe create a different action or route for that
     const ids = await postGrids([parsedGrid]);
     return { success: 1, ids };
   } catch (error) {
