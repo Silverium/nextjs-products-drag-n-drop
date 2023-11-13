@@ -14,23 +14,23 @@ export default async function ProductsPage({ searchParams: { grid: gridIds } }: 
     const [grids]: [GridDbItem[]] = await Promise.all([getGrids(gridIdsArray)]);
 
     return (
-        <section className="min-h-screen p-24">
+        <section className="min-h-screen sm:p-2 md:p-4 lg:p-8 xl:p-16 2xl:p-32 w-100">
             <h1 className="text-4xl font-bold mb-8 text-center">Grids</h1>
-            <div className="relative flex flex-col gap-8 container">
+            <div className="relative gap-8 container self-center">
                 {grids.map(({ grid, id }) => (
                     <div key={id} className="flex flex-col gap-2 border border-dashed border-gray-500 p-8">
                         <div className="flex gap-2">
                             <Link
                                 href={`/products?grid=${id}`}
                                 title={id}
-                                className=" rounded self-start p-2 border border-transparent transition-colors border-gray-400 hover:border-gray-700 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+                                className=" rounded self-start p-2 border border-transparent transition-colors border-gray-400 hover:border-gray-700 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 hover:dark:text-white dark:text-black"
                             >
                                 Edit in Products page
                             </Link>
                             <Link
                                 href={`/grids?grid=${id}`}
                                 title={id}
-                                className=" rounded self-start p-2 border border-transparent transition-colors border-gray-400 hover:border-gray-700 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+                                className=" rounded self-start p-2 border border-transparent transition-colors border-gray-400 hover:border-gray-700 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 hover:dark:text-white dark:text-black"
                             >
                                 Show standalone
                             </Link>

@@ -8,7 +8,7 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
     <div className="product-card flex-col self-center">
       <Link
         href={{ pathname: "/products", query: { products: [product.id] } }}
-        className="w-100 text-center block rounded-tl rounded-tr border border-transparent transition-colors hover:border-gray-300 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
+        className="w-100 text-center block rounded-tl rounded-tr border border-transparent transition-colors hover:border-gray-300 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 dark:text-black hover:dark:text-white"
         rel="noopener noreferrer"
       >
         {product.name}
@@ -19,7 +19,7 @@ const ProductCard: FC<{ product: Product }> = ({ product }) => {
         width={product.imageWidth}
         height={product.imageHeight}
       />
-      <span className="w-100 text-center block rounded-bl rounded-br border border-transparent transition-colors hover:border-gray-300 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 font-bold">{product.price}€</span>
+      <span className="w-100 text-center block rounded-bl rounded-br border border-transparent transition-colors hover:border-gray-300 bg-gray-100 hover:bg-gray-300 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 font-bold dark:text-black hover:dark:text-white">{product.price}€</span>
     </div>
   );
 };
