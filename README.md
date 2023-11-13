@@ -72,3 +72,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - Refactor "Add product" button to be like a card placeholder
     - Responsive design for Products page
 17. Functionality to remove items
+18. Link in Products page to the grid view

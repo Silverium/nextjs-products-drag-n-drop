@@ -13,6 +13,7 @@ import { createGrid } from "@/app/api/grids/actions";
 import getTemplateStyle from "@/utils/style/getTemplateStyle";
 import ProductCard from "./ProductCard";
 import productsSettings from "@/settings/products";
+import Link from "next/link";
 
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates, grid }: { products?: Product[], maxItemsPerRow?: number, templates: Template[], grid?: GridDbItem }) {
     const [zoom, setZoom] = useState<number>(100);
@@ -148,6 +149,9 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                         </button>
                         <span className="text-red-500 m-2">{formState?.message}</span>
                     </form>
+                   {(grid?.id || formState.id) && <Link href={`/grids?grid=${formState.id}`} className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        See Product in Grid view
+                    </Link>}
                 </div>
             </div>
             <div id="editor" ref={editorRef as LegacyRef<HTMLDivElement>} className="relative " style={{
