@@ -16,7 +16,7 @@ import productsSettings from "@/settings/products";
 export default function DraggableLists({ products, maxItemsPerRow = 3, templates, grid }: { products?: Product[], maxItemsPerRow?: number, templates: Template[], grid?: GridDbItem }) {
     const [zoom, setZoom] = useState<number>(100);
     const isDragDisabled = zoom !== 100;
-    const itemsMap = useRef({} as Record<number, Product>);
+    const itemsMap = useRef({} as Record<string, Product>);
 
     // split into rows of maxItemsPerRow items each
     const [gridState, updateGridState] = useState(grid ? grid.grid : (products || []).reduce((acc, product, index) => {
@@ -85,9 +85,9 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
 
     const addProduct = useCallback((index: number) => async () => {
         const clonedItems = [...gridState.map(row => ({ items: [...row.items], template: row.template }))];
-        let randomId = Math.floor(Math.random() * 1000);
+        let randomId = String(Math.floor(Math.random() * 1000));
         while (itemsMap.current[randomId]) {
-            randomId = Math.floor(Math.random() * 1000);
+            randomId = String(Math.floor(Math.random() * 1000));
         }
         const randomProduct = await getProducts([randomId]);
         clonedItems[index].items.push(randomProduct[0]);
