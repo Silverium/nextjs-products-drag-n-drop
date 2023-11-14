@@ -149,7 +149,12 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
                         </button>
                         <span className="text-red-500 m-2">{formState?.message}</span>
                     </form>
-                   {(grid?.id || formState.id) && <Link href={`/grids?grid=${formState.id}`} className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    {(grid?.id || formState.id) && <Link href={{
+                        pathname: `/grids`,
+                        query: {
+                            grid: grid?.id || formState.id
+                        }
+                    }} className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         See Product in Grid view
                     </Link>}
                 </div>
@@ -269,7 +274,7 @@ export default function DraggableLists({ products, maxItemsPerRow = 3, templates
             </div>
 
 
-        </div>
+        </div >
 
     )
 }
